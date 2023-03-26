@@ -19,5 +19,7 @@ db.once("open", () => {
   console.log("mongodb connected!");
 });
 
+console.log(process.env);
+
 // export route module
 module.exports = db;

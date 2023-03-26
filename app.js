@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 require("./config/mongoose");
 const URL = require("./models/url"); // load model
 const shortURL = require("./shortURL"); // load function
+const ORIGIN_URL = process.env.ORIGIN_URL; // 使用環境變量定義url
 
 const app = express();
 const port = 3000;
@@ -31,7 +32,7 @@ app.post("/", (req, res) => {
     )
     .then((data) =>
       res.render("index", {
-        origin: req.headers.origin,
+        origin: ORIGIN_URL,
         shortURL: data.shortURL,
       })
     )
@@ -47,9 +48,10 @@ app.get("/:shortURL", (req, res) => {
           errorMsg: "Can't find the URL",
           errorURL: req.headers.host + "/" + shortURL,
         });
-      }
+      } else{
       // when success, redirect to the original url
-      res.redirect(data.originalURL);
+      return res.redirect(data.originalURL);
+      }
     })
     .catch((error) => console.error(error));
 });
